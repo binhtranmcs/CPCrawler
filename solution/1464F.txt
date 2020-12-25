@@ -1,0 +1,118 @@
+#include<bits/stdc++.h>
+#define cs const
+#define pb push_back
+#define fi first
+#define se second
+using namespace std;
+typedef pair<int, int> pi;
+cs int N = 2e5 + 50;
+int n, m; vector<int> G[N];
+int dep[N], fa[N][20];
+int in[N], out[N], tim, p[N];
+int mn[N + N][20], lg[N + N], k, _in[N];
+multiset<pi> S; 
+void pre_dfs(int u, int f){
+	p[in[u] = ++tim] = u;
+	dep[u] = dep[fa[u][0] = f] + 1; 
+	_in[u] = ++k, mn[_in[u]][0] = u;
+	for(int i = 1; i <= 18; i++)
+	fa[u][i] = fa[fa[u][i - 1]][i - 1]; 
+	for(int v : G[u]) if(v != f)
+	pre_dfs(v, u), mn[++k][0] = u; out[u] = tim;
+}
+int chk(int x, int y){ return dep[x] < dep[y] ? x : y; }
+int LCA(int x, int y){
+	x = _in[x], y = _in[y];
+	if(x > y) swap(x, y); int z = lg[y - x + 1];
+	return chk(mn[x][z], mn[y - (1 << z) + 1][z]);
+} int dist(int x, int y){ 
+	if(!x || !y) return 0;
+	return dep[x] + dep[y] - 2 * dep[LCA(x, y)]; 
+} int jmp(int x, int d){
+	for(int i = 18; ~i; i--)
+	if(d >= (1 << i)) x = fa[x][i], d -= 1 << i;
+	if(!x) x = 1; return x; 
+}
+namespace bit{
+	int c[N];
+	int ask(int x){ int ans = 0; for(; x; x -= x & -x) ans += c[x]; return ans; }
+	void ins(int x, int z){ for(; x <= n; x += x & -x) c[x] += z; }
+	int qry(int l, int r){ return ask(r) - ask(l - 1); }
+}
+struct lll {
+	int x, y, d; lll (int _x = 0, int _y = 0, 
+	int _d = 0){ x = _x, y = _y, d = _d; } 
+};
+lll operator + (lll a, lll b){
+	if(!a.x) return b; 
+	if(!b.x) return a; 
+	int d1 = dist(a.x, b.x), d2 = dist(a.x, b.y);
+	int d3 = dist(a.y, b.x), d4 = dist(a.y, b.y);
+	int z = max({a.d, b.d, d1, d2, d3, d4});
+	if(a.d == z) return a; 
+	if(b.d == z) return b;
+	if(d1 == z) return lll(a.x, b.x, z);
+	if(d2 == z) return lll(a.x, b.y, z);
+	if(d3 == z) return lll(a.y, b.x, z);
+	return lll(a.y, b.y, z);
+}
+namespace SGT{
+	#define mid ((l + r) >> 1)
+	cs int N = ::N << 2; lll t[N]; int c[N];
+	void ins(int x, int l, int r, int z, int v){
+		if(l == r){
+			c[x] += v; 
+			if(c[x]) t[x] = lll(p[z], p[z], 0);
+			else t[x] = lll(0, 0, 0); return;
+		} if(z <= mid) ins(x << 1, l, mid, z, v);
+		else ins(x << 1 | 1, mid + 1, r, z, v);
+		t[x] = t[x << 1] + t[x << 1 | 1];
+	} lll qry(int x, int l, int r, int L, int R){
+		if(L <= l && r <= R) return t[x];
+		if(R <= mid) return qry(x << 1, l, mid, L, R); 
+		if(L > mid) return qry(x << 1 | 1, mid + 1, r, L, R);
+		return qry(x << 1, l, mid, L, R) + 
+		qry(x << 1 | 1, mid + 1, r, L, R);
+	}
+}
+void work(int x, int y, int z){
+	int l = LCA(x, y);
+	bit :: ins(in[x], z);
+	bit :: ins(in[y], z);
+	bit :: ins(in[l], -z);
+	if(z > 0) S.insert(pi(dep[l], l));
+	else S.erase(S.find(pi(dep[l], l)));
+	SGT :: ins(1, 1, n, in[l], z);
+}
+int main(){
+	#ifdef FSYo
+	freopen("1.in", "r", stdin);
+	#endif
+	cin >> n >> m;
+	for(int i = 1, u, v; i < n; i++)
+	scanf("%d%d", &u, &v), 
+	G[u].pb(v), G[v].pb(u); pre_dfs(1, 0);
+	for(int i = 2; i <= k; i++)
+	lg[i] = lg[i >> 1] + 1; 
+	for(int i = 1; (1 << i) <= k; i++)
+	for(int j = 1; j + (1 << i) - 1 <= k; j++)
+	mn[j][i] = chk(mn[j][i - 1], mn[j + (1 << i - 1)][i - 1]);
+	while(m--){
+		int o, x, y, d; scanf("%d", &o);
+		if(o == 1) 
+			scanf("%d%d", &x, &y), work(x, y, 1);
+		if(o == 2)
+			scanf("%d%d", &x, &y), work(x, y, -1);
+		if(o == 3){
+			scanf("%d", &d);
+			if(S.size() <= 1) { puts("Yes"); continue; }
+			int x = (--S.end())->se;
+			int p = jmp(x, d), q = jmp(p, d);
+			int z = bit :: qry(in[q], out[q]);
+			if(z < S.size()) { puts("No"); continue; }
+			lll w = SGT :: qry(1, 1, n, in[q], out[q]);
+			if(dist(w.x, p) <= d && dist(w.y, p) <= d) puts("Yes");
+			else puts("No");
+		}
+	} return 0; 
+}

@@ -1,0 +1,2 @@
+from bisect import bisect_left, bisect
+for _ in range(int(input())):n = int(input());segments = [[int(i) for i in input().split()] for x in range(n)];l, r = sorted([i[0] for i in segments]), sorted([i[1] for i in segments]);print(n - max(bisect(l, s[1]) - bisect_left(r, s[0]) for s in segments))

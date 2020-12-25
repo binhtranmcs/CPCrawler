@@ -1,0 +1,1 @@
+$<.to_a[1..].map(&:to_i).each{|x|s='';9.downto(1){|i|x-=i and s=i.to_s+s if x>=i};puts x==0?s:-1}

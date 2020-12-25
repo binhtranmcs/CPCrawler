@@ -1,0 +1,11 @@
+for _ in range(int(input())):
+    n = int(input())
+    b = list(map(int, input().split()))
+    maxi,mini,t,pos=0,0,0,0
+    for i in range(0,n):
+        t-=b[i]-pos-1;
+        mini=min(mini,t);
+        t+=1
+        maxi=max(maxi,t);
+        pos=b[i];
+    print(n-maxi+mini+1)

@@ -1,0 +1,1 @@
+$<.to_a[1..].each{puts ('cba'*334)[0..._1.split[0].to_i]}

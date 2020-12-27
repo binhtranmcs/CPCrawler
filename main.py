@@ -31,7 +31,7 @@ def visitPage(url):
                 getProblem(URL + href)
         elif len(comp) == 6 and comp[-2] == 'problem':
             try:
-                x = solution[href]
+                solution[href]
             except KeyError:
                 solution[href] = 1
                 getSolution(URL + href)

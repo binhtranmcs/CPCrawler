@@ -11,6 +11,7 @@ solution = {}
 sess = requests.Session()
 
 def visitPage(url):
+    '''eg: url = https://codeforces.com/problemset'''
     sourceCode = requests.get(url)
     text = sourceCode.text
     soup = BeautifulSoup(text, features="html.parser")

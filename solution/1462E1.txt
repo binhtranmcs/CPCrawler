@@ -1,6 +1,0 @@
-g=lambda x:x*(x-1)*(x-2)//6
-f=lambda x:sum(g(sum(c[i:i+x]))for i in range(n))
-for s in[*open(0)][2::2]:
- a=s.split();n=len(a)+2;c=[0]*n;
- for x in a:c[int(x)+1]+=1
- print(f(3)-f(2))

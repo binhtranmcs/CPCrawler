@@ -1,9 +1,0 @@
-def f(i,j):
- r.add(sum(a[i:j]));k=i
- while k<j and 2*a[k]<=a[i]+a[j-1]:k+=1
- if k<j:f(i,k);f(k,j) 
-R=lambda:map(int,input().split())
-t,=R()
-for _ in[0]*t:
- n,q=R();a=sorted(R());r={0};f(0,n)
- for _ in[0]*q:s,=R();print('NYoe s'[s in r::2])

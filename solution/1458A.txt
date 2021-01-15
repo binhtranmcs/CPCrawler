@@ -1,4 +1,0 @@
-from math import gcd
-_, a, g = input(), list(map(int, input().split())), 0
-for v in a[1:]: g = gcd(g, v - a[0])
-print(*[gcd(g, v + a[0]) for v in map(int, input().split())])

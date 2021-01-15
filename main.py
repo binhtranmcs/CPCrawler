@@ -41,6 +41,7 @@ def getProblem(url):
     tmp = url.split('/')
     tmp = '/' + tmp[-2] + tmp[-1]
     f = open(PROB + tmp + '.txt', "w")
+    print('getting problem statement ' + tmp[1:])
     sourceCode = requests.get(url)
     text = sourceCode.text
     soup = BeautifulSoup(text, features="html.parser")
@@ -59,7 +60,8 @@ def getProblem(url):
 
 def getSolution(url):
     '''eg: url = https://codeforces.com/problemset/status/1464/problem/F'''
-    print("visiting", url)
+    tmp = url.split('/')
+    print("getting solution " + tmp[-3] + tmp[-1])
     source = requests.get(url)
     text = source.text
     soup = BeautifulSoup(text, features = 'html.parser')

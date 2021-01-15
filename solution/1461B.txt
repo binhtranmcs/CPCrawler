@@ -1,5 +1,0 @@
-I=input
-for _ in[0]*int(I()):
- a=[I()for _ in[0]*int(I().split()[0])];b=[0]*501;r=0
- for s in a[::-1]:b=0,*(x<'.'and min(b[i:i+3])+1for i,x in enumerate(s)),0;r+=sum(b)
- print(r)
